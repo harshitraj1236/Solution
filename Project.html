@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapid Crisis Response — AI Emergency Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04070f;
+    --bg2: #080d1a;
+    --bg3: #0c1224;
+    --blue: #00cfff;
+    --blue2: #007bff;
+    --red: #ff1744;
+    --amber: #ffab00;
+    --green: #00e676;
+    --purple: #7c4dff;
+    --glass: rgba(0,207,255,0.04);
+    --glass-border: rgba(0,207,255,0.12);
+    --glass-red: rgba(255,23,68,0.08);
+    --glass-amber: rgba(255,171,0,0.08);
+    --text: #e8f4ff;
+    --text2: #8aa8c8;
+    --text3: #4a6880;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  h1,h2,h3,h4 { font-family: 'Orbitron', monospace; letter-spacing: 0.05em; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--blue2); border-radius: 2px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+    height: 64px;
+    background: rgba(4,7,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.1em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--red);
+    animation: pulse-red 1.4s infinite;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--text2); text-decoration: none;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--blue); }
+  .nav-cta {
+    background: var(--red);
+    color: #fff;
+    border: none; cursor: pointer;
+    padding: 0.5rem 1.2rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    animation: pulse-border-red 2s infinite;
+    transition: transform 0.15s;
+  }
+  .nav-cta:hover { transform: scale(1.04); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 2rem 4rem;
+    text-align: center;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,207,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,207,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: grid-drift 20s linear infinite;
+  }
+  @keyframes grid-drift { from { transform: translateY(0); } to { transform: translateY(60px); } }
+  .hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+  }
+  .glow-blue { width: 600px; height: 600px; background: rgba(0,123,255,0.12); top: -200px; left: 50%; transform: translateX(-50%); }
+  .glow-red { width: 400px; height: 400px; background: rgba(255,23,68,0.08); bottom: 0; right: -100px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--glass-red);
+    border: 1px solid rgba(255,23,68,0.3);
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    color: #ff6b6b;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    position: relative; z-index: 1;
+  }
+  .hero-badge .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--red);
+    animation: pulse-red 1s infinite;
+  }
+  .hero-title {
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 1.2rem;
+    position: relative; z-index: 1;
+    text-shadow: 0 0 60px rgba(0,207,255,0.3);
+  }
+  .hero-title .accent { color: var(--blue); }
+  .hero-title .danger { color: var(--red); }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text2);
+    max-width: 680px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    line-height: 1.8;
+    position: relative; z-index: 1;
+  }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--red), #c2003c);
+    color: #fff; border: none; cursor: pointer;
+    padding: 0.85rem 2rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(255,23,68,0.4);
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { box-shadow: 0 0 50px rgba(255,23,68,0.6); transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--blue);
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    padding: 0.85rem 2rem;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 6px;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+  }
+  .btn-secondary:hover { background: rgba(0,207,255,0.08); border-color: var(--blue); box-shadow: 0 0 20px rgba(0,207,255,0.2); }
+
+  /* HERO MAP */
+  .hero-map-wrapper {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 900px;
+    margin: 3rem auto 0;
+  }
+  .map-frame {
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 80px rgba(0,207,255,0.1), inset 0 0 40px rgba(0,0,0,0.5);
+  }
+  .map-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: rgba(0,207,255,0.05);
+    border-bottom: 1px solid var(--glass-border);
+    font-size: 0.72rem;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .map-header .stat { color: var(--blue); }
+  .map-header .stat.red { color: var(--red); }
+  #crisis-map { width: 100%; height: 340px; display: block; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--glass-border);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 3rem 2rem;
+    max-width: 1100px;
+    margin-left: auto; margin-right: auto;
+  }
+  .stat-cell {
+    background: var(--bg2);
+    padding: 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .stat-cell .num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--blue);
+    display: block;
+  }
+  .stat-cell .num.red { color: var(--red); }
+  .stat-cell .num.amber { color: var(--amber); }
+  .stat-cell .num.green { color: var(--green); }
+  .stat-cell .label { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+  /* SECTION */
+  section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--blue); font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 1rem;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--blue); }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
+  .section-sub { color: var(--text2); max-width: 600px; font-size: 1rem; line-height: 1.8; }
+  .full-width-section { max-width: 100%; padding: 6rem 2rem; background: var(--bg2); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+  .full-width-inner { max-width: 1200px; margin: 0 auto; }
+
+  /* FEATURES GRID */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+  .feature-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 1.8rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover { border-color: rgba(0,207,255,0.3); background: rgba(0,207,255,0.06); transform: translateY(-3px); }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-card.red-accent:hover { border-color: rgba(255,23,68,0.3); background: var(--glass-red); }
+  .feature-card.red-accent::before { background: linear-gradient(90deg, transparent, var(--red), transparent); }
+  .feature-card.amber-accent:hover { border-color: rgba(255,171,0,0.3); background: var(--glass-amber); }
+  .feature-card.amber-accent::before { background: linear-gradient(90deg, transparent, var(--amber), transparent); }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+    position: relative;
+  }
+  .feature-icon.blue { background: rgba(0,207,255,0.12); box-shadow: 0 0 20px rgba(0,207,255,0.15); }
+  .feature-icon.red { background: rgba(255,23,68,0.12); box-shadow: 0 0 20px rgba(255,23,68,0.15); }
+  .feature-icon.amber { background: rgba(255,171,0,0.12); box-shadow: 0 0 20px rgba(255,171,0,0.15); }
+  .feature-icon.green { background: rgba(0,230,118,0.12); box-shadow: 0 0 20px rgba(0,230,118,0.15); }
+  .feature-icon.purple { background: rgba(124,77,255,0.12); box-shadow: 0 0 20px rgba(124,77,255,0.15); }
+  .feature-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.6rem; letter-spacing: 0.05em; }
+  .feature-card p { font-size: 0.88rem; color: var(--text2); line-height: 1.7; }
+  .feature-tag {
+    display: inline-block; margin-top: 1rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .tag-blue { background: rgba(0,207,255,0.12); color: var(--blue); }
+  .tag-red { background: rgba(255,23,68,0.12); color: var(--red); }
+  .tag-amber { background: rgba(255,171,0,0.12); color: var(--amber); }
+  .tag-green { background: rgba(0,230,118,0.12); color: var(--green); }
+
+  /* DASHBOARD SECTION */
+  .dashboard-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .dash-sidebar {
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 1.2rem;
+  }
+  .dash-main {
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .dash-card {
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 1.2rem;
+  }
+  .dash-label {
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text3); font-family: 'Share Tech Mono', monospace;
+    margin-bottom: 1rem;
+  }
+  .incident-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 8px;
+  }
+  .incident-item:last-child { border-bottom: none; }
+  .incident-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 5px;
+  }
+  .dot-red { background: var(--red); box-shadow: 0 0 8px var(--red); animation: pulse-red 1.2s infinite; }
+  .dot-amber { background: var(--amber); box-shadow: 0 0 8px var(--amber); animation: pulse-amber 1.5s infinite; }
+  .dot-blue { background: var(--blue); box-shadow: 0 0 8px var(--blue); }
+  .dot-green { background: var(--green); }
+  .incident-info { flex: 1; }
+  .incident-title { font-size: 0.8rem; font-weight: 600; margin-bottom: 2px; }
+  .incident-meta { font-size: 0.7rem; color: var(--text3); font-family: 'Share Tech Mono', monospace; }
+  .severity-badge {
+    font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 700; flex-shrink: 0;
+  }
+  .sev-critical { background: rgba(255,23,68,0.2); color: var(--red); border: 1px solid rgba(255,23,68,0.3); }
+  .sev-high { background: rgba(255,171,0,0.2); color: var(--amber); border: 1px solid rgba(255,171,0,0.3); }
+  .sev-low { background: rgba(0,207,255,0.1); color: var(--blue); border: 1px solid rgba(0,207,255,0.2); }
+  .metrics-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem; }
+  .metric-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .metric-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .metric-val.blue { color: var(--blue); }
+  .metric-val.red { color: var(--red); }
+  .metric-val.green { color: var(--green); }
+  .metric-lbl { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+  #response-chart { width: 100%; height: 120px; }
+  .role-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+  .role-tab {
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--text3);
+    font-family: 'Exo 2', sans-serif;
+  }
+  .role-tab.active { background: rgba(0,207,255,0.12); color: var(--blue); border-color: rgba(0,207,255,0.3); }
+  .role-tab:hover:not(.active) { color: var(--text2); border-color: var(--glass-border); }
+
+  /* AI ASSISTANT */
+  .ai-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem; }
+  .chat-window {
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(0,207,255,0.08);
+  }
+  .chat-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 1rem 1.2rem;
+    background: rgba(0,207,255,0.06);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .ai-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(0,207,255,0.4);
+  }
+  .ai-name { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.05em; }
+  .ai-status { font-size: 0.65rem; color: var(--green); font-family: 'Share Tech Mono', monospace; }
+  .chat-body { padding: 1.2rem; display: flex; flex-direction: column; gap: 1rem; min-height: 320px; }
+  .msg { display: flex; flex-direction: column; max-width: 85%; }
+  .msg.ai { align-self: flex-start; }
+  .msg.user { align-self: flex-end; align-items: flex-end; }
+  .msg-bubble {
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    font-size: 0.83rem;
+    line-height: 1.6;
+  }
+  .msg.ai .msg-bubble { background: rgba(0,207,255,0.08); border: 1px solid rgba(0,207,255,0.15); color: var(--text); border-bottom-left-radius: 4px; }
+  .msg.user .msg-bubble { background: rgba(255,23,68,0.12); border: 1px solid rgba(255,23,68,0.2); color: var(--text); border-bottom-right-radius: 4px; }
+  .msg-time { font-size: 0.6rem; color: var(--text3); margin-top: 3px; font-family: 'Share Tech Mono', monospace; }
+  .chat-input-area {
+    padding: 0.8rem 1.2rem;
+    border-top: 1px solid var(--glass-border);
+    display: flex; gap: 0.5rem; align-items: center;
+  }
+  .chat-input {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 0.55rem 0.8rem;
+    color: var(--text);
+    font-size: 0.82rem;
+    font-family: 'Exo 2', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: rgba(0,207,255,0.4); }
+  .chat-send {
+    background: var(--blue2);
+    border: none; cursor: pointer;
+    width: 36px; height: 36px; border-radius: 8px;
+    color: white; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .chat-send:hover { background: var(--blue); box-shadow: 0 0 16px rgba(0,207,255,0.4); }
+  .panic-btn-demo {
+    margin-top: 1rem;
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.8rem 1.2rem;
+    background: rgba(255,23,68,0.08);
+    border: 1px solid rgba(255,23,68,0.3);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.8rem;
+    color: #ff6b6b;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .panic-btn-demo:hover { background: rgba(255,23,68,0.15); }
+  .panic-icon { font-size: 1.2rem; animation: shake 3s 3s infinite; }
+  @keyframes shake { 0%,85%,100%{transform:none} 88%{transform:rotate(-8deg)} 92%{transform:rotate(8deg)} 96%{transform:rotate(-5deg)} }
+
+  /* SOS FLOATING BUTTON */
+  .sos-demo {
+    display: flex; justify-content: center; align-items: center;
+    flex-direction: column; gap: 1rem;
+    padding: 3rem;
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+  }
+  .sos-btn {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff1744, #b71c1c);
+    border: 4px solid rgba(255,23,68,0.4);
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 40px rgba(255,23,68,0.5), inset 0 0 20px rgba(0,0,0,0.3);
+    animation: sos-pulse 2.5s infinite;
+    transition: transform 0.1s;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    border: none;
+  }
+  .sos-btn::before, .sos-btn::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(255,23,68,0.4);
+    animation: sos-ripple 2.5s infinite;
+  }
+  .sos-btn::before { width: 150px; height: 150px; }
+  .sos-btn::after { width: 185px; height: 185px; animation-delay: 0.5s; }
+  @keyframes sos-pulse { 0%,100%{box-shadow:0 0 40px rgba(255,23,68,0.5)} 50%{box-shadow:0 0 70px rgba(255,23,68,0.8)} }
+  @keyframes sos-ripple { 0%{transform:scale(0.9);opacity:1} 100%{transform:scale(1.5);opacity:0} }
+  .sos-btn:active { transform: scale(0.96); }
+  .sos-label { font-size: 0.75rem; color: var(--text3); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; }
+
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .pricing-card {
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .pricing-card:hover { transform: translateY(-4px); }
+  .pricing-card.featured {
+    border-color: rgba(0,207,255,0.35);
+    background: rgba(0,207,255,0.04);
+    box-shadow: 0 0 40px rgba(0,207,255,0.1);
+  }
+  .pricing-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    font-size: 0.6rem; letter-spacing: 0.15em;
+    background: rgba(0,207,255,0.15);
+    color: var(--blue);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .plan-name { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text3); font-family: 'Share Tech Mono', monospace; margin-bottom: 0.5rem; }
+  .plan-price { font-family: 'Orbitron', monospace; font-size: 2.4rem; font-weight: 700; color: var(--text); }
+  .plan-price span { font-size: 0.9rem; color: var(--text3); font-family: 'Exo 2', sans-serif; font-weight: 400; }
+  .plan-desc { font-size: 0.83rem; color: var(--text2); margin: 0.8rem 0 1.5rem; }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 2rem; }
+  .plan-features li { font-size: 0.83rem; color: var(--text2); display: flex; gap: 8px; align-items: flex-start; }
+  .plan-features li::before { content: '→'; color: var(--blue); flex-shrink: 0; font-size: 0.8rem; margin-top: 2px; }
+  .plan-btn {
+    width: 100%; padding: 0.8rem;
+    border-radius: 8px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .plan-btn.outline { background: transparent; border: 1px solid var(--glass-border); color: var(--text2); }
+  .plan-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
+  .plan-btn.filled { background: var(--blue2); border: 1px solid var(--blue); color: #fff; }
+  .plan-btn.filled:hover { background: var(--blue); box-shadow: 0 0 24px rgba(0,207,255,0.4); }
+
+  /* CASE STUDIES */
+  .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .case-card {
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .case-card:hover { transform: translateY(-3px); }
+  .case-banner {
+    height: 6px;
+  }
+  .banner-red { background: linear-gradient(90deg, var(--red), #ff6090); }
+  .banner-amber { background: linear-gradient(90deg, var(--amber), #ffd740); }
+  .banner-blue { background: linear-gradient(90deg, var(--blue2), var(--blue)); }
+  .case-body { padding: 1.5rem; }
+  .case-type { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text3); font-family: 'Share Tech Mono', monospace; margin-bottom: 0.5rem; }
+  .case-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.75rem; letter-spacing: 0.04em; }
+  .case-desc { font-size: 0.83rem; color: var(--text2); line-height: 1.7; margin-bottom: 1.2rem; }
+  .case-stats { display: flex; gap: 1.5rem; }
+  .case-stat { text-align: center; }
+  .case-stat .val { font-family: 'Orbitron', monospace; font-size: 1.4rem; font-weight: 700; }
+  .case-stat .val.red { color: var(--red); }
+  .case-stat .val.amber { color: var(--amber); }
+  .case-stat .val.green { color: var(--green); }
+  .case-stat .lbl { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ABOUT */
+  .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .about-text p { color: var(--text2); line-height: 1.9; margin-bottom: 1.2rem; font-size: 0.95rem; }
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .team-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+  }
+  .team-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    margin: 0 auto 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    border: 2px solid var(--glass-border);
+  }
+  .team-name { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
+  .team-role { font-size: 0.7rem; color: var(--text3); }
+
+  /* VALUES */
+  .values-row { display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap; }
+  .value-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    color: var(--text2);
+    background: var(--glass);
+  }
+  .value-pill .icon { font-size: 1rem; }
+
+  /* CONTACT */
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .contact-info h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .contact-info p { font-size: 0.87rem; color: var(--text2); line-height: 1.8; margin-bottom: 1.5rem; }
+  .contact-points { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-point {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0.75rem 1rem;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    font-size: 0.83rem;
+    color: var(--text2);
+  }
+  .contact-point .cp-icon { font-size: 1.1rem; }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); font-family: 'Share Tech Mono', monospace; }
+  .form-group input, .form-group select, .form-group textarea {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: 'Exo 2', sans-serif;
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: rgba(0,207,255,0.4); }
+  .form-group select option { background: var(--bg2); }
+  .submit-btn {
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #007bff, #00cfff);
+    border: none; border-radius: 8px;
+    color: white; font-family: 'Orbitron', monospace;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 24px rgba(0,207,255,0.3);
+  }
+  .submit-btn:hover { box-shadow: 0 0 40px rgba(0,207,255,0.5); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--glass-border);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-logo { font-family: 'Orbitron', monospace; font-size: 1.1rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .footer-tagline { font-size: 0.82rem; color: var(--text3); margin-bottom: 2rem; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .footer-links a { color: var(--text3); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.08em; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--blue); }
+  .footer-copy { font-size: 0.72rem; color: var(--text3); font-family: 'Share Tech Mono', monospace; }
+
+  /* FLOATING SOS */
+  .floating-sos {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .floating-sos-btn {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff1744, #c2003c);
+    border: none;
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255,23,68,0.5);
+    animation: sos-pulse 2.5s infinite;
+    transition: transform 0.1s;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  .floating-sos-btn:active { transform: scale(0.95); }
+  .floating-sos-lbl { font-size: 0.6rem; color: var(--red); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; }
+
+  /* ANIMATIONS */
+  @keyframes pulse-red { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  @keyframes pulse-amber { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  @keyframes pulse-border-red {
+    0%,100%{box-shadow:0 0 0 0 rgba(255,23,68,0.6)}
+    50%{box-shadow:0 0 0 5px rgba(255,23,68,0)}
+  }
+  @keyframes fade-in { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+  .fade-in { animation: fade-in 0.7s ease forwards; }
+
+  /* SECTION DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+    margin: 0;
+  }
+
+  /* TICKER */
+  .alert-ticker {
+    background: rgba(255,23,68,0.08);
+    border-top: 1px solid rgba(255,23,68,0.2);
+    border-bottom: 1px solid rgba(255,23,68,0.2);
+    padding: 0.5rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .ticker-inner { display: flex; white-space: nowrap; animation: ticker 30s linear infinite; }
+  .ticker-item { display: inline-flex; align-items: center; gap: 8px; padding: 0 3rem; font-size: 0.72rem; color: #ff8a80; font-family: 'Share Tech Mono', monospace; }
+  .ticker-sep { color: rgba(255,23,68,0.4); }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* PREDICTION PANEL */
+  .predict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+  .predict-card {
+    background: var(--bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .predict-bar { height: 4px; border-radius: 2px; margin: 0.6rem 0 0.8rem; background: rgba(255,255,255,0.05); }
+  .predict-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+  .fill-red { background: linear-gradient(90deg, #ff1744, #ff6090); box-shadow: 0 0 8px rgba(255,23,68,0.5); }
+  .fill-amber { background: linear-gradient(90deg, #ffab00, #ffd740); box-shadow: 0 0 8px rgba(255,171,0,0.5); }
+  .fill-blue { background: linear-gradient(90deg, #007bff, #00cfff); box-shadow: 0 0 8px rgba(0,207,255,0.5); }
+  .fill-green { background: linear-gradient(90deg, #00c853, #00e676); }
+  .predict-label { font-size: 0.78rem; font-weight: 600; }
+  .predict-val { font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 700; }
+  .predict-desc { font-size: 0.72rem; color: var(--text3); margin-top: 0.3rem; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .dashboard-layout { grid-template-columns: 1fr; }
+    .ai-layout { grid-template-columns: 1fr; }
+    .about-layout { grid-template-columns: 1fr; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .predict-grid { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .metrics-row { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width: 600px) {
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .hero-title { font-size: 2rem; }
+    section { padding: 4rem 1.2rem; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .cases-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="dot"></span>
+    RCR<span style="color:#fff;font-weight:300"> SYSTEM</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#ai-assistant">AI Assistant</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#cases">Cases</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('hero-sos').click()">⚡ SOS DEMO</button>
+</nav>
+
+<!-- ALERT TICKER -->
+<div class="alert-ticker" style="margin-top:64px;">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item">🔴 CRITICAL — Fire alarm triggered: Marriott Downtown, Floor 4 <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🟡 HIGH — Medical emergency: Grand Hyatt Lobby <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🔵 INFO — Evacuation drill completed: Hilton Plaza <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🔴 CRITICAL — Security breach: Sheraton East Wing <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🟡 HIGH — Overcrowding detected: Convention Center Hall B <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🔵 INFO — AI risk model updated: 12 hotels, 3 new threat zones <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🔴 CRITICAL — Fire alarm triggered: Marriott Downtown, Floor 4 <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🟡 HIGH — Medical emergency: Grand Hyatt Lobby <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🔵 INFO — Evacuation drill completed: Hilton Plaza <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🔴 CRITICAL — Security breach: Sheraton East Wing <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🟡 HIGH — Overcrowding detected: Convention Center Hall B <span class="ticker-sep">|</span></span>
+    <span class="ticker-item">🔵 INFO — AI risk model updated: 12 hotels, 3 new threat zones <span class="ticker-sep">|</span></span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow glow-blue"></div>
+  <div class="hero-glow glow-red"></div>
+
+  <div class="hero-badge">
+    <span class="live-dot"></span>
+    LIVE — 247 Active Venues Monitored
+  </div>
+
+  <h1 class="hero-title">
+    Rapid <span class="accent">Crisis</span><br>
+    Response <span class="danger">Intelligence</span>
+  </h1>
+
+  <p class="hero-sub">
+    The world's first AI-powered emergency coordination ecosystem built for hospitality.
+    Connecting guests, staff, and emergency responders — in seconds, not minutes.
+  </p>
+
+  <div class="hero-actions">
+    <button class="btn-primary" id="hero-sos" onclick="triggerSOS()">⚡ TRIGGER SOS DEMO</button>
+    <button class="btn-secondary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard →</button>
+  </div>
+
+  <div class="hero-map-wrapper">
+    <div class="map-frame">
+      <div class="map-header">
+        <span style="color:var(--text3)">CRISIS INTELLIGENCE MAP — LIVE</span>
+        <span class="stat">↑ 3 NEW INCIDENTS</span>
+        <span class="stat red" style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;animation:pulse-red 1s infinite"></span> MONITORING ACTIVE</span>
+        <span class="stat" id="map-time">00:00:00</span>
+      </div>
+      <canvas id="crisis-map"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-cell">
+    <span class="num" id="s1">0</span>
+    <div class="label">Hotels Protected</div>
+  </div>
+  <div class="stat-cell">
+    <span class="num red" id="s2">0</span>
+    <div class="label">Avg Response Time</div>
+  </div>
+  <div class="stat-cell">
+    <span class="num amber" id="s3">0</span>
+    <div class="label">Crises Resolved</div>
+  </div>
+  <div class="stat-cell">
+    <span class="num green" id="s4">0</span>
+    <div class="label">Lives Protected</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Core Systems</div>
+  <h2 class="section-title">Every Second<br><span style="color:var(--blue)">Counts.</span></h2>
+  <p class="section-sub">Ten integrated AI modules that transform your property from reactive to predictive — before, during, and after any crisis.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon blue">🗺️</div>
+      <h3>Real-Time Crisis Map</h3>
+      <p>Live geospatial intelligence across all connected venues. Color-coded threat levels, AI-predicted risk corridors, and instant incident visualization on an adaptive dark map.</p>
+      <span class="feature-tag tag-blue">Live Intelligence</span>
+    </div>
+    <div class="feature-card red-accent">
+      <div class="feature-icon red">🤖</div>
+      <h3>AI Crisis Assistant</h3>
+      <p>Voice-activated "ARIA" guides guests and staff through any emergency. CPR instructions, evacuation routes, and calm step-by-step direction — available in 45 languages.</p>
+      <span class="feature-tag tag-red">Voice Enabled</span>
+    </div>
+    <div class="feature-card red-accent">
+      <div class="feature-icon red">🆘</div>
+      <h3>One-Tap SOS System</h3>
+      <p>Single press instantly broadcasts live location, situation type, and optional voice snippet to staff, responders, and emergency services simultaneously.</p>
+      <span class="feature-tag tag-red">Instant Alert</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon blue">🌐</div>
+      <h3>Smart Communication Bridge</h3>
+      <p>Unified panic-free channel between guests, hotel staff, and authorities. Real-time auto-translation for 80+ languages with priority-based message routing.</p>
+      <span class="feature-tag tag-blue">80+ Languages</span>
+    </div>
+    <div class="feature-card amber-accent">
+      <div class="feature-icon amber">🧠</div>
+      <h3>Predictive Safety AI</h3>
+      <p>Machine learning analyzes historical patterns, IoT sensor data, weather feeds, and crowd density to forecast risks before they materialize — with specific prevention actions.</p>
+      <span class="feature-tag tag-amber">Predictive AI</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon blue">🖥️</div>
+      <h3>Staff Command Center</h3>
+      <p>Role-based dashboard for managers, security, and medics. Real-time incident tracking, shift-based alert routing, action logs, and team coordination in one unified interface.</p>
+      <span class="feature-tag tag-blue">Role-Based</span>
+    </div>
+    <div class="feature-card amber-accent">
+      <div class="feature-icon amber">👁️</div>
+      <h3>Crowd Safety Monitoring</h3>
+      <p>Integrates with CCTV and IoT sensors to detect panic movement, unusual behavior patterns, and dangerous density levels — alerting staff before situations escalate.</p>
+      <span class="feature-tag tag-amber">IoT + CCTV</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon green">📡</div>
+      <h3>Offline Emergency Mode</h3>
+      <p>Peer-to-peer mesh networking keeps your team connected during internet outages. SMS fallback ensures critical alerts always reach the right person, no matter what.</p>
+      <span class="feature-tag tag-green">Mesh Network</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon blue">📊</div>
+      <h3>Post-Crisis Analytics</h3>
+      <p>Full timeline replay of incidents, response time breakdowns, bottleneck identification, and AI-powered recommendations to optimize your emergency protocols.</p>
+      <span class="feature-tag tag-blue">AI Reports</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon purple">🎮</div>
+      <h3>Training Simulation Mode</h3>
+      <p>Gamified crisis scenarios let staff practice real emergencies in a safe digital environment. Earn safety scores, unlock certifications, and track team-wide preparedness.</p>
+      <span class="feature-tag tag-blue">Gamified</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DASHBOARD PREVIEW -->
+<div class="full-width-section" id="dashboard">
+  <div class="full-width-inner">
+    <div class="section-label">Command Center</div>
+    <h2 class="section-title">The <span style="color:var(--blue)">Nerve Center</span> of Hotel Safety</h2>
+    <p class="section-sub">An adaptive, role-based dashboard giving every team member exactly what they need — nothing more, nothing less.</p>
+
+    <div class="role-tabs" style="margin-top:2rem">
+      <button class="role-tab active" onclick="setRole('manager',this)">Manager View</button>
+      <button class="role-tab" onclick="setRole('security',this)">Security</button>
+      <button class="role-tab" onclick="setRole('medic',this)">Medical</button>
+    </div>
+
+    <div class="dashboard-layout">
+      <!-- SIDEBAR -->
+      <div class="dash-sidebar">
+        <div class="dash-label">⚡ ACTIVE INCIDENTS</div>
+        <div class="incident-item">
+          <span class="incident-dot dot-red"></span>
+          <div class="incident-info">
+            <div class="incident-title">Fire Alarm — Floor 14</div>
+            <div class="incident-meta">Marriott City Center · 2m ago</div>
+          </div>
+          <span class="severity-badge sev-critical">CRIT</span>
+        </div>
+        <div class="incident-item">
+          <span class="incident-dot dot-amber"></span>
+          <div class="incident-info">
+            <div class="incident-title">Medical — Lobby Guest</div>
+            <div class="incident-meta">Grand Hyatt · 5m ago</div>
+          </div>
+          <span class="severity-badge sev-high">HIGH</span>
+        </div>
+        <div class="incident-item">
+          <span class="incident-dot dot-amber"></span>
+          <div class="incident-info">
+            <div class="incident-title">Overcrowding Alert — Hall B</div>
+            <div class="incident-meta">Convention Ctr · 8m ago</div>
+          </div>
+          <span class="severity-badge sev-high">HIGH</span>
+        </div>
+        <div class="incident-item">
+          <span class="incident-dot dot-blue"></span>
+          <div class="incident-info">
+            <div class="incident-title">Security — Unauthorized Access</div>
+            <div class="incident-meta">Hilton East Wing · 12m ago</div>
+          </div>
+          <span class="severity-badge sev-low">MED</span>
+        </div>
+        <div class="incident-item">
+          <span class="incident-dot dot-blue"></span>
+          <div class="incident-info">
+            <div class="incident-title">SOS — Room 402</div>
+            <div class="incident-meta">Sheraton · 18m ago</div>
+          </div>
+          <span class="severity-badge sev-low">MED</span>
+        </div>
+        <div style="margin-top:1.5rem">
+          <div class="dash-label">🧠 AI RISK FORECAST</div>
+          <div class="predict-card" style="margin:0">
+            <div class="predict-label">Fire Risk — Kitchen</div>
+            <div class="predict-bar"><div class="predict-fill fill-red" style="width:78%"></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="predict-desc">78% probability next 2h</div>
+              <div class="predict-val" style="color:var(--red);font-size:0.9rem">HIGH</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN DASH -->
+      <div class="dash-main">
+        <div class="metrics-row">
+          <div class="metric-box">
+            <div class="metric-val blue" id="m-incidents">7</div>
+            <div class="metric-lbl">Active Incidents</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val red" id="m-response">1.8<span style="font-size:0.7rem">min</span></div>
+            <div class="metric-lbl">Avg Response</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val green" id="m-resolved">24</div>
+            <div class="metric-lbl">Resolved Today</div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-label" style="margin-bottom:0.5rem">📈 RESPONSE TIME TREND — LAST 24h</div>
+          <canvas id="response-chart"></canvas>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-label">🔴 CRITICAL ALERT — LIVE</div>
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.8rem;background:rgba(255,23,68,0.08);border:1px solid rgba(255,23,68,0.25);border-radius:10px;">
+            <div style="font-size:1.8rem;animation:pulse-red 1s infinite">🔥</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:0.9rem;color:#ff6b6b;margin-bottom:3px">FIRE ALARM — MARRIOTT DOWNTOWN, FLOOR 14</div>
+              <div style="font-size:0.75rem;color:var(--text3);font-family:'Share Tech Mono',monospace">Triggered 2m 14s ago · 6 guests in zone · Evacuation route B activated · FD alerted</div>
+            </div>
+            <button style="background:var(--red);border:none;color:#fff;padding:0.5rem 1rem;border-radius:6px;font-family:'Orbitron',monospace;font-size:0.6rem;font-weight:700;letter-spacing:0.08em;cursor:pointer;">RESPOND</button>
+          </div>
+
+          <div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap">
+            <div style="flex:1;min-width:150px">
+              <div class="dash-label" style="margin-bottom:0.5rem">ASSIGNED TEAM</div>
+              <div style="display:flex;flex-direction:column;gap:0.4rem">
+                <div style="font-size:0.78rem;color:var(--text2);display:flex;gap:6px;align-items:center"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span>Sec. Officer Chen — <span style="color:var(--green)">EN ROUTE</span></div>
+                <div style="font-size:0.78rem;color:var(--text2);display:flex;gap:6px;align-items:center"><span style="width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block"></span>Medic Patel — <span style="color:var(--amber)">STANDBY</span></div>
+                <div style="font-size:0.78rem;color:var(--text2);display:flex;gap:6px;align-items:center"><span style="width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block"></span>Fire Dept — <span style="color:var(--red)">3 MIN ETA</span></div>
+              </div>
+            </div>
+            <div style="flex:1;min-width:150px">
+              <div class="dash-label" style="margin-bottom:0.5rem">COMMUNICATION LOG</div>
+              <div style="display:flex;flex-direction:column;gap:0.3rem">
+                <div style="font-size:0.72rem;color:var(--text3);font-family:'Share Tech Mono',monospace">14:23:01 — Alarm triggered auto</div>
+                <div style="font-size:0.72rem;color:var(--text3);font-family:'Share Tech Mono',monospace">14:23:02 — FD + Staff notified</div>
+                <div style="font-size:0.72rem;color:var(--text3);font-family:'Share Tech Mono',monospace">14:23:05 — Guests alerted (6)</div>
+                <div style="font-size:0.72rem;color:var(--blue);font-family:'Share Tech Mono',monospace">14:25:14 — Response ongoing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI ASSISTANT -->
+<section id="ai-assistant">
+  <div class="section-label">AI Core</div>
+  <h2 class="section-title">Meet <span style="color:var(--blue)">ARIA</span><br>Your Crisis Co-pilot</h2>
+  <p class="section-sub">Adaptive Response Intelligence Assistant. Always calm. Always ready. Speaks your guest's language and guides them safely through any emergency.</p>
+
+  <div class="ai-layout">
+    <div>
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="ai-avatar">🤖</div>
+          <div>
+            <div class="ai-name">ARIA — Emergency AI</div>
+            <div class="ai-status">● ACTIVE · Response Mode</div>
+          </div>
+          <div style="margin-left:auto;font-size:0.65rem;color:var(--text3);font-family:'Share Tech Mono',monospace">SECURE CHANNEL</div>
+        </div>
+        <div class="chat-body" id="chat-body">
+          <div class="msg ai">
+            <div class="msg-bubble">Hello! I'm ARIA, your emergency response assistant. I'm here 24/7 to help you stay safe. How can I assist you right now?</div>
+            <div class="msg-time">System · Just now</div>
+          </div>
+          <div class="msg user">
+            <div class="msg-bubble">There's smoke coming from the hallway. What do I do?</div>
+            <div class="msg-time">Guest · Just now</div>
+          </div>
+          <div class="msg ai">
+            <div class="msg-bubble">🚨 <strong>STAY CALM. ACT NOW:</strong><br><br>1. Do NOT open the door if it feels hot<br>2. Call hotel emergency: ext. 911<br>3. Use the wet towel to seal door gap<br>4. Signal from the window — I'm alerting staff to your location<br><br>I've notified security and the fire department. Help is 2 minutes away. Stay low and keep breathing slowly.</div>
+            <div class="msg-time">ARIA · Instant</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input class="chat-input" id="chat-input" placeholder="Type your emergency..." onkeypress="if(event.key==='Enter')sendChat()">
+          <button class="chat-send" onclick="sendChat()">↑</button>
+        </div>
+      </div>
+      <div class="panic-btn-demo" onclick="addPanicMode()">
+        <span class="panic-icon">🎙️</span>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700">VOICE PANIC MODE</div>
+          <div style="font-size:0.68rem;color:var(--text3);margin-top:2px">Say "Help me" to activate emergency protocol</div>
+        </div>
+        <span style="margin-left:auto;font-size:0.65rem;letter-spacing:0.1em;color:var(--text3);font-family:'Share Tech Mono',monospace">TAP TO TRY</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
+      <div class="sos-demo">
+        <div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-family:'Share Tech Mono',monospace;margin-bottom:1rem">ONE-TAP SOS — DEMO</div>
+        <button class="sos-btn" id="hero-sos2" onclick="triggerSOS()">
+          <span style="font-size:1.6rem">🆘</span>
+          <span>SOS</span>
+        </button>
+        <div class="sos-label">HOLD TO ACTIVATE EMERGENCY</div>
+        <div id="sos-status" style="font-size:0.72rem;color:var(--text3);font-family:'Share Tech Mono',monospace;text-align:center;min-height:16px;margin-top:0.5rem"></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:0.75rem">
+        <div style="padding:1rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;font-size:0.8rem;color:var(--text2)">
+          <div style="font-weight:700;color:var(--text);margin-bottom:4px;font-size:0.75rem;letter-spacing:0.05em">⌚ WEARABLE INTEGRATION</div>
+          Smartwatch SOS trigger — a long press on your watch face activates the full emergency protocol, even if your phone is out of reach.
+        </div>
+        <div style="padding:1rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;font-size:0.8rem;color:var(--text2)">
+          <div style="font-weight:700;color:var(--text);margin-bottom:4px;font-size:0.75rem;letter-spacing:0.05em">🚗 EVACUATION TRANSPORT</div>
+          Auto-requests emergency ride services for mass evacuation scenarios. Priority routing with first responder convoy coordination.
+        </div>
+        <div style="padding:1rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;font-size:0.8rem;color:var(--text2)">
+          <div style="font-weight:700;color:var(--text);margin-bottom:4px;font-size:0.75rem;letter-spacing:0.05em">🧘 MENTAL HEALTH SUPPORT</div>
+          ARIA switches to calming mode post-crisis — guided breathing, grounding exercises, and direct connection to trauma counselors.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PREDICTIVE AI -->
+<section>
+  <div class="section-label">Predictive Intelligence</div>
+  <h2 class="section-title">See Danger<br><span style="color:var(--amber)">Before It Arrives</span></h2>
+  <p class="section-sub">Our AI engine processes thousands of data points — sensors, weather, occupancy, historical incidents — to predict and prevent crises, not just respond to them.</p>
+
+  <div class="predict-grid" style="margin-top:2.5rem">
+    <div class="predict-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="predict-label">🔥 Fire Risk — Kitchen Area</div>
+        <div class="predict-val" style="color:var(--red)">78%</div>
+      </div>
+      <div class="predict-bar"><div class="predict-fill fill-red" style="width:78%"></div></div>
+      <div class="predict-desc">Elevated due to chef shift change + sensor temp spike. Recommend: Kitchen inspection in 15 min.</div>
+    </div>
+    <div class="predict-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="predict-label">👥 Overcrowding — Pool Deck</div>
+        <div class="predict-val" style="color:var(--amber)">62%</div>
+      </div>
+      <div class="predict-bar"><div class="predict-fill fill-amber" style="width:62%"></div></div>
+      <div class="predict-desc">Weekend peak + concert checkin surge. Recommend: Open overflow area B now.</div>
+    </div>
+    <div class="predict-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="predict-label">🌩️ Weather Threat — Outdoor Areas</div>
+        <div class="predict-val" style="color:var(--blue)">41%</div>
+      </div>
+      <div class="predict-bar"><div class="predict-fill fill-blue" style="width:41%"></div></div>
+      <div class="predict-desc">Severe storm warning issued 3h out. Recommend: Clear outdoor dining now.</div>
+    </div>
+    <div class="predict-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="predict-label">✅ Security Risk — All Entrances</div>
+        <div class="predict-val" style="color:var(--green)">12%</div>
+      </div>
+      <div class="predict-bar"><div class="predict-fill fill-green" style="width:12%"></div></div>
+      <div class="predict-desc">Low risk. All access points monitored. Perimeter secure. 3 guards on shift.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<div class="full-width-section" id="pricing" style="background:var(--bg)">
+  <div class="full-width-inner">
+    <div class="section-label">Deployment Plans</div>
+    <h2 class="section-title">Protection That<br><span style="color:var(--blue)">Scales With You</span></h2>
+    <p class="section-sub">Flexible plans for boutique hotels, large chains, and enterprise resort groups. All plans include 24/7 AI monitoring and instant emergency routing.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$299<span>/month</span></div>
+        <div class="plan-desc">For boutique hotels and small properties up to 100 rooms.</div>
+        <ul class="plan-features">
+          <li>Up to 100 rooms monitored</li>
+          <li>ARIA AI assistant (text only)</li>
+          <li>One-Tap SOS system</li>
+          <li>Staff command center (5 users)</li>
+          <li>Basic incident analytics</li>
+          <li>Email + SMS alerts</li>
+          <li>8×5 support</li>
+        </ul>
+        <button class="plan-btn outline">Get Started</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="plan-name">Professional</div>
+        <div class="plan-price">$799<span>/month</span></div>
+        <div class="plan-desc">For mid-size hotels and resort properties up to 500 rooms.</div>
+        <ul class="plan-features">
+          <li>Up to 500 rooms monitored</li>
+          <li>ARIA with voice + 45 languages</li>
+          <li>SOS + wearable integration</li>
+          <li>Full Command Center (50 users)</li>
+          <li>Predictive Safety AI</li>
+          <li>CCTV + IoT sensor integration</li>
+          <li>Offline mesh network mode</li>
+          <li>Post-crisis analytics suite</li>
+          <li>24/7 priority support</li>
+        </ul>
+        <button class="plan-btn filled">Start Free Trial</button>
+      </div>
+      <div class="pricing-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price" style="font-size:1.8rem">Custom</div>
+        <div class="plan-desc">For hotel chains, convention centers, and multi-property groups.</div>
+        <ul class="plan-features">
+          <li>Unlimited properties + rooms</li>
+          <li>Custom AI model training</li>
+          <li>Multi-venue coordination hub</li>
+          <li>Dedicated crisis response team</li>
+          <li>White-label guest mobile app</li>
+          <li>API access + custom integrations</li>
+          <li>Training simulation platform</li>
+          <li>Compliance + audit reporting</li>
+          <li>24/7 dedicated SLA</li>
+        </ul>
+        <button class="plan-btn outline">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CASE STUDIES -->
+<section id="cases">
+  <div class="section-label">Real World Impact</div>
+  <h2 class="section-title">When Every<br><span style="color:var(--red)">Second Mattered</span></h2>
+  <p class="section-sub">Real scenarios where RCR's AI coordination made the decisive difference between crisis and catastrophe.</p>
+
+  <div class="cases-grid">
+    <div class="case-card">
+      <div class="case-banner banner-red"></div>
+      <div class="case-body">
+        <div class="case-type">🔥 Fire Emergency · Las Vegas</div>
+        <div class="case-title">Ballroom Kitchen Fire — 340 Guests Evacuated</div>
+        <div class="case-desc">A grease fire in the kitchen during a conference dinner triggered RCR's AI. ARIA guided all 340 guests through three simultaneous evacuation routes while staff coordinated with fire services — in under 90 seconds.</div>
+        <div class="case-stats">
+          <div class="case-stat"><div class="val red">83s</div><div class="lbl">Full Evacuation</div></div>
+          <div class="case-stat"><div class="val green">340</div><div class="lbl">Guests Safe</div></div>
+          <div class="case-stat"><div class="val amber">$0</div><div class="lbl">Injuries</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="case-card">
+      <div class="case-banner banner-amber"></div>
+      <div class="case-body">
+        <div class="case-type">🏥 Medical Emergency · Dubai</div>
+        <div class="case-title">Cardiac Arrest in Lobby — 4-Minute Response</div>
+        <div class="case-desc">A guest collapsed in the lobby. RCR's system identified the incident via CCTV, alerted the nearest certified first-aider (32 meters away), sent ARIA CPR guidance to bystanders, and had an ambulance en route in 4 minutes.</div>
+        <div class="case-stats">
+          <div class="case-stat"><div class="val amber">4min</div><div class="lbl">Response Time</div></div>
+          <div class="case-stat"><div class="val green">100%</div><div class="lbl">Recovery Rate</div></div>
+          <div class="case-stat"><div class="val blue">32m</div><div class="lbl">Nearest Responder</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="case-card">
+      <div class="case-banner banner-blue"></div>
+      <div class="case-body">
+        <div class="case-type">🌀 Natural Disaster · Miami</div>
+        <div class="case-title">Hurricane Shelter-in-Place — 1,200 Guests Coordinated</div>
+        <div class="case-desc">48 hours before hurricane landfall, RCR's predictive AI issued preparation protocols. During the storm, offline mesh mode kept all staff connected. 1,200 guests sheltered safely with real-time updates throughout.</div>
+        <div class="case-stats">
+          <div class="case-stat"><div class="val blue">48h</div><div class="lbl">Advance Warning</div></div>
+          <div class="case-stat"><div class="val green">1,200</div><div class="lbl">Guests Safe</div></div>
+          <div class="case-stat"><div class="val amber">100%</div><div class="lbl">Uptime (offline)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-layout">
+    <div class="about-text">
+      <div class="section-label">Our Mission</div>
+      <h2 class="section-title">Built by<br><span style="color:var(--blue)">Responders.</span><br>For Everyone.</h2>
+      <p>Rapid Crisis Response was founded by emergency management veterans, hospitality technology experts, and AI researchers who witnessed firsthand how slow, fragmented communication costs lives in hotel emergencies.</p>
+      <p>We believe every guest deserves to feel safe. Every staff member deserves tools that actually work under pressure. And every property deserves the same level of emergency intelligence as an international airport.</p>
+      <p>Our platform is trusted by over 2,400 properties across 47 countries — from boutique bed-and-breakfasts to 5,000-room mega-resorts — all unified on one intelligence layer.</p>
+      <div class="values-row">
+        <div class="value-pill"><span class="icon">🛡️</span> Safety First</div>
+        <div class="value-pill"><span class="icon">⚡</span> Speed Matters</div>
+        <div class="value-pill"><span class="icon">🌍</span> Globally Accessible</div>
+        <div class="value-pill"><span class="icon">🔐</span> Privacy by Design</div>
+      </div>
+    </div>
+    <div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar" style="background:rgba(0,207,255,0.1)">👨‍💼</div>
+          <div class="team-name">Saurabh Kumar</div>
+          <div class="team-role">CEO & Co-founder<br><span style="color:var(--text3)">Ex-FEMA Director</span></div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:rgba(124,77,255,0.1)">👩‍🔬</div>
+          <div class="team-name">Aryan Singh</div>
+          <div class="team-role">Chief AI Officer<br><span style="color:var(--text3)">Ex-Google DeepMind</span></div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:rgba(0,230,118,0.1)">👨‍🚒</div>
+          <div class="team-name">Manshi Pal</div>
+          <div class="team-role">Head of Response Ops<br><span style="color:var(--text3)">20yr Fire Commander</span></div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:rgba(255,171,0,0.1)">👩‍💻</div>
+          <div class="team-name">Harshit Raj</div>
+          <div class="team-role">CTO & Co-founder<br><span style="color:var(--text3)">Ex-Palantir Lead Eng</span></div>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;padding:1.5rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;text-align:center">
+        <div style="font-family:'Orbitron',monospace;font-size:0.7rem;color:var(--text3);letter-spacing:0.1em;margin-bottom:0.5rem">CERTIFIED BY</div>
+        <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;color:var(--text3);font-size:0.72rem;font-family:'Share Tech Mono',monospace">
+          <span>ISO 22320</span>
+          <span>NFPA 72</span>
+          <span>SOC 2 Type II</span>
+          <span>GDPR</span>
+          <span>PCI-DSS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="full-width-section" id="contact" style="background:var(--bg2)">
+  <div class="full-width-inner">
+    <div class="section-label">Get Protected</div>
+    <h2 class="section-title">Your Property.<br><span style="color:var(--blue)">Integrated Today.</span></h2>
+    <p class="section-sub">From contract to fully operational in under 48 hours. Our team handles setup, training, and certification for your entire staff.</p>
+
+    <div class="contact-layout" style="margin-top:3rem">
+      <div class="contact-info">
+        <h3>Emergency Integration Hotline</h3>
+        <p>Our integration team is available around the clock. Whether you're planning ahead or need rapid deployment, we're ready to protect your guests immediately.</p>
+        <div class="contact-points">
+          <div class="contact-point"><span class="cp-icon">📞</span><div><div style="font-weight:600;font-size:0.82rem">+1 (800) RCR-SAFE</div><div style="font-size:0.72rem;color:var(--text3)">24/7 Emergency Hotline</div></div></div>
+          <div class="contact-point"><span class="cp-icon">📧</span><div><div style="font-weight:600;font-size:0.82rem">emergency@rcrsystem.ai</div><div style="font-size:0.72rem;color:var(--text3)">Response within 15 minutes</div></div></div>
+          <div class="contact-point"><span class="cp-icon">🌐</span><div><div style="font-weight:600;font-size:0.82rem">Global HQ — 47 Countries</div><div style="font-size:0.72rem;color:var(--text3)">Regional offices on 6 continents</div></div></div>
+          <div class="contact-point"><span class="cp-icon">⚡</span><div><div style="font-weight:600;font-size:0.82rem">48-Hour Rapid Deployment</div><div style="font-size:0.72rem;color:var(--text3)">From contract to live system</div></div></div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <div class="form-group">
+          <label>Property Name</label>
+          <input type="text" placeholder="Grand Hotel & Suites">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select>
+              <option>General Manager</option>
+              <option>Security Director</option>
+              <option>Operations Manager</option>
+              <option>Owner</option>
+              <option>IT Director</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@hotel.com">
+        </div>
+        <div class="form-group">
+          <label>Property Size</label>
+          <select>
+            <option>Under 100 rooms</option>
+            <option>100–300 rooms</option>
+            <option>300–500 rooms</option>
+            <option>500+ rooms / Multi-property</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Deployment Urgency</label>
+          <select>
+            <option>Planning ahead (30+ days)</option>
+            <option>Within 2 weeks</option>
+            <option>Urgent — within 48 hours</option>
+            <option>Emergency — today</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="3" placeholder="Tell us about your property and emergency preparedness needs..."></textarea>
+        </div>
+        <button class="submit-btn" onclick="this.textContent='✓ REQUEST SENT — WE\'LL CONTACT YOU WITHIN 15 MIN'">⚡ REQUEST EMERGENCY INTEGRATION</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">⚡ RAPID CRISIS RESPONSE</div>
+    <div class="footer-tagline">AI-Powered Emergency Intelligence for the Hospitality Industry</div>
+    <div class="footer-links">
+      <a href="#">Features</a>
+      <a href="#">Pricing</a>
+      <a href="#">Case Studies</a>
+      <a href="#">API Docs</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms</a>
+      <a href="#">Compliance</a>
+      <a href="#">Blog</a>
+    </div>
+    <div style="display:flex;justify-content:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+      <span class="feature-tag tag-blue" style="font-size:0.6rem">ISO 22320 CERTIFIED</span>
+      <span class="feature-tag tag-green" style="font-size:0.6rem">SOC 2 TYPE II</span>
+      <span class="feature-tag tag-amber" style="font-size:0.6rem">GDPR COMPLIANT</span>
+      <span class="feature-tag tag-blue" style="font-size:0.6rem">24/7 MONITORED</span>
+    </div>
+    <div class="footer-copy">© 2025 Rapid Crisis Response Inc. All rights reserved. · Built to save lives.</div>
+  </div>
+</footer>
+
+<!-- FLOATING SOS -->
+<div class="floating-sos">
+  <button class="floating-sos-btn" onclick="triggerSOS()">
+    <span style="font-size:1.4rem">🆘</span>
+    <span style="font-size:0.5rem;letter-spacing:0.05em">SOS</span>
+  </button>
+  <div class="floating-sos-lbl">EMERGENCY</div>
+</div>
+
+<!-- SOS OVERLAY -->
+<div id="sos-overlay" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(255,23,68,0.12);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;animation:fade-in 0.3s ease;display:none">
+  <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;color:var(--red);text-shadow:0 0 40px var(--red);animation:pulse-red 0.8s infinite">🚨 SOS ACTIVATED</div>
+  <div style="background:rgba(4,7,15,0.9);border:2px solid var(--red);border-radius:16px;padding:2rem;max-width:400px;width:90%;text-align:center;box-shadow:0 0 60px rgba(255,23,68,0.4)">
+    <div style="font-size:0.7rem;letter-spacing:0.15em;color:var(--red);font-family:'Share Tech Mono',monospace;margin-bottom:0.5rem">EMERGENCY PROTOCOL INITIATED</div>
+    <div id="sos-steps" style="font-size:0.85rem;color:var(--text2);line-height:2;text-align:left"></div>
+    <div style="margin-top:1.5rem;height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden">
+      <div id="sos-progress" style="height:100%;background:var(--red);border-radius:2px;width:0%;transition:width 0.5s ease;box-shadow:0 0 8px var(--red)"></div>
+    </div>
+  </div>
+  <button onclick="closeSOSOverlay()" style="background:transparent;border:1px solid var(--glass-border);color:var(--text2);padding:0.5rem 1.5rem;border-radius:6px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:0.82rem">✕ CLOSE DEMO</button>
+</div>
+
+<script>
+// CLOCK
+function updateClock() {
+  const now = new Date();
+  const t = [now.getHours(),now.getMinutes(),now.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+  const el = document.getElementById('map-time');
+  if(el) el.textContent = t;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// STAT COUNTERS
+function animateCount(id, target, suffix='', duration=2000) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now-start)/duration, 1);
+    const ease = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(ease*target) + suffix;
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+setTimeout(()=>{
+  animateCount('s1',2400,'');
+  animateCount('s2',88,'s');
+  animateCount('s3',14200,'');
+  animateCount('s4',94000,'');
+},500);
+
+// CRISIS MAP CANVAS
+const canvas = document.getElementById('crisis-map');
+const ctx = canvas.getContext('2d');
+let mapW, mapH;
+const incidents = [];
+const IncidentTypes = [
+  {type:'fire',color:'#ff1744',label:'FIRE'},
+  {type:'medical',color:'#ffab00',label:'MED'},
+  {type:'security',color:'#007bff',label:'SEC'},
+  {type:'disaster',color:'#7c4dff',label:'DIS'},
+];
+
+function initMap() {
+  mapW = canvas.offsetWidth;
+  mapH = canvas.offsetHeight;
+  canvas.width = mapW;
+  canvas.height = mapH;
+  if(incidents.length===0) {
+    for(let i=0;i<18;i++) {
+      const t = IncidentTypes[Math.floor(Math.random()*IncidentTypes.length)];
+      incidents.push({
+        x: 50+Math.random()*(mapW-100),
+        y: 40+Math.random()*(mapH-80),
+        type: t.type, color: t.color, label: t.label,
+        size: 4+Math.random()*4,
+        pulse: Math.random()*Math.PI*2,
+        severity: Math.random(),
+        vx: (Math.random()-0.5)*0.3,
+        vy: (Math.random()-0.5)*0.3,
+        active: Math.random()>0.4
+      });
+    }
+  }
+}
+
+function drawMap() {
+  ctx.clearRect(0,0,mapW,mapH);
+
+  // Background
+  ctx.fillStyle = '#060b18';
+  ctx.fillRect(0,0,mapW,mapH);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(0,123,255,0.08)';
+  ctx.lineWidth = 0.5;
+  for(let x=0;x<mapW;x+=50) { ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,mapH);ctx.stroke(); }
+  for(let y=0;y<mapH;y+=50) { ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(mapW,y);ctx.stroke(); }
+
+  // Road lines
+  ctx.strokeStyle = 'rgba(0,123,255,0.15)';
+  ctx.lineWidth = 1.5;
+  [[0,mapH*0.35,mapW,mapH*0.38],[0,mapH*0.65,mapW,mapH*0.63],[mapW*0.3,0,mapW*0.32,mapH],[mapW*0.65,0,mapW*0.68,mapH]].forEach(([x1,y1,x2,y2])=>{
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  });
+
+  // Hotel blocks
+  ctx.fillStyle='rgba(0,123,255,0.04)';
+  [[80,60,120,80],[200,100,90,70],[350,50,100,90],[520,80,130,75],[100,200,110,80],[300,180,140,90],[480,200,100,70],[150,270,130,80],[380,260,110,90],[560,180,120,70]].forEach(([x,y,w,h])=>{
+    ctx.fillRect(x,y,w,h);
+    ctx.strokeStyle='rgba(0,123,255,0.08)';ctx.lineWidth=0.5;
+    ctx.strokeRect(x,y,w,h);
+  });
+
+  // Prediction zones
+  ctx.fillStyle='rgba(255,23,68,0.06)';
+  ctx.beginPath();ctx.arc(mapW*0.25,mapH*0.4,80,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(255,23,68,0.2)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.arc(mapW*0.25,mapH*0.4,80,0,Math.PI*2);ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle='rgba(255,171,0,0.04)';
+  ctx.beginPath();ctx.arc(mapW*0.7,mapH*0.6,65,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(255,171,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.arc(mapW*0.7,mapH*0.6,65,0,Math.PI*2);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Zone labels
+  ctx.font='10px "Share Tech Mono"';
+  ctx.fillStyle='rgba(255,23,68,0.5)';
+  ctx.fillText('RISK ZONE A',mapW*0.25-35,mapH*0.4-85);
+  ctx.fillStyle='rgba(255,171,0,0.5)';
+  ctx.fillText('RISK ZONE B',mapW*0.7-30,mapH*0.6-70);
+
+  // Incidents
+  const t = Date.now()/1000;
+  incidents.forEach(inc=>{
+    inc.x += inc.vx; inc.y += inc.vy;
+    if(inc.x<20||inc.x>mapW-20) inc.vx*=-1;
+    if(inc.y<20||inc.y>mapH-20) inc.vy*=-1;
+    inc.pulse += 0.05;
+
+    if(inc.active) {
+      // Pulse rings
+      const r = (Math.sin(inc.pulse)*0.5+0.5);
+      ctx.strokeStyle=inc.color+(Math.round((1-r)*80).toString(16).padStart(2,'0'));
+      ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.arc(inc.x,inc.y,inc.size+r*20,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle=inc.color+(Math.round((1-r)*40).toString(16).padStart(2,'0'));
+      ctx.beginPath();ctx.arc(inc.x,inc.y,inc.size+r*35,0,Math.PI*2);ctx.stroke();
+
+      // Core dot
+      ctx.fillStyle=inc.color;
+      ctx.beginPath();ctx.arc(inc.x,inc.y,inc.size,0,Math.PI*2);ctx.fill();
+
+      // Glow
+      const g=ctx.createRadialGradient(inc.x,inc.y,0,inc.x,inc.y,inc.size*3);
+      g.addColorStop(0,inc.color+'60');g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;
+      ctx.beginPath();ctx.arc(inc.x,inc.y,inc.size*3,0,Math.PI*2);ctx.fill();
+
+      // Label
+      ctx.fillStyle='rgba(6,11,24,0.8)';
+      ctx.fillRect(inc.x+inc.size+3,inc.y-7,25,14);
+      ctx.font='bold 8px "Share Tech Mono"';
+      ctx.fillStyle=inc.color;
+      ctx.fillText(inc.label,inc.x+inc.size+5,inc.y+3);
+    } else {
+      ctx.fillStyle=inc.color+'40';
+      ctx.beginPath();ctx.arc(inc.x,inc.y,inc.size*0.7,0,Math.PI*2);ctx.fill();
+    }
+  });
+
+  // Scan line
+  const scanY = ((t*60)%mapH);
+  const sg=ctx.createLinearGradient(0,scanY-20,0,scanY+5);
+  sg.addColorStop(0,'transparent');sg.addColorStop(1,'rgba(0,207,255,0.06)');
+  ctx.fillStyle=sg;ctx.fillRect(0,scanY-20,mapW,25);
+  ctx.strokeStyle='rgba(0,207,255,0.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,scanY);ctx.lineTo(mapW,scanY);ctx.stroke();
+
+  // Legend
+  ctx.fillStyle='rgba(6,11,24,0.7)';ctx.fillRect(8,8,140,60);
+  ctx.strokeStyle='rgba(0,207,255,0.15)';ctx.lineWidth=0.5;ctx.strokeRect(8,8,140,60);
+  ctx.font='9px "Share Tech Mono"';
+  IncidentTypes.forEach((t,i)=>{
+    ctx.fillStyle=t.color;
+    ctx.beginPath();ctx.arc(20,20+i*13,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=t.color+'cc';
+    ctx.fillText(t.label+' — ACTIVE INCIDENT',28,23+i*13);
+  });
+
+  requestAnimationFrame(drawMap);
+}
+
+window.addEventListener('resize',initMap);
+initMap();
+drawMap();
+
+// RESPONSE TIME CHART
+const rctx = document.getElementById('response-chart').getContext('2d');
+const rc = document.getElementById('response-chart');
+rc.width = rc.offsetWidth; rc.height = 120;
+const rData = [4.2,3.8,5.1,3.2,2.9,3.5,2.1,4.0,1.8,2.3,3.1,2.5,1.9,3.8,2.2,1.8,3.0,2.5,1.6,2.0,3.4,2.1,1.8,2.2];
+function drawResponseChart() {
+  const w=rc.width,h=rc.height,pad=20;
+  rctx.clearRect(0,0,w,h);
+  rctx.fillStyle='rgba(0,0,0,0)';
+  const mx=Math.max(...rData)+0.5, mn=0;
+  const sx=(w-pad*2)/(rData.length-1), sy=(h-pad*2)/(mx-mn);
+  const py=v=>h-pad-(v-mn)*sy;
+
+  // Grid
+  rctx.strokeStyle='rgba(255,255,255,0.04)';rctx.lineWidth=0.5;
+  [1,2,3,4,5].forEach(v=>{rctx.beginPath();rctx.moveTo(pad,py(v));rctx.lineTo(w-pad,py(v));rctx.stroke();});
+
+  // Fill
+  rctx.beginPath();
+  rData.forEach((v,i)=>{ if(i===0)rctx.moveTo(pad+i*sx,py(v)); else rctx.lineTo(pad+i*sx,py(v)); });
+  rctx.lineTo(w-pad,h-pad);rctx.lineTo(pad,h-pad);rctx.closePath();
+  const g=rctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,'rgba(0,207,255,0.2)');g.addColorStop(1,'rgba(0,207,255,0)');
+  rctx.fillStyle=g;rctx.fill();
+
+  // Line
+  rctx.beginPath();
+  rData.forEach((v,i)=>{ if(i===0)rctx.moveTo(pad+i*sx,py(v)); else rctx.lineTo(pad+i*sx,py(v)); });
+  rctx.strokeStyle='#00cfff';rctx.lineWidth=1.5;rctx.stroke();
+
+  // Dots
+  rData.forEach((v,i)=>{
+    rctx.beginPath();rctx.arc(pad+i*sx,py(v),2.5,0,Math.PI*2);
+    rctx.fillStyle='#00cfff';rctx.fill();
+  });
+
+  // Labels
+  rctx.font='9px "Share Tech Mono"';
+  rctx.fillStyle='rgba(138,168,200,0.6)';
+  [1,3,5].forEach(v=>{ rctx.fillText(v+'m',2,py(v)+3); });
+}
+drawResponseChart();
+
+// ROLE TABS
+function setRole(role, btn) {
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const m = document.getElementById('m-incidents');
+  const mr = document.getElementById('m-response');
+  const rv = {manager:[7,'1.8min',24],security:[3,'0.9min',18],medic:[2,'1.2min',11]};
+  if(rv[role]) {
+    m.textContent=rv[role][0];
+    mr.innerHTML=rv[role][1].replace('min','<span style="font-size:0.7rem">min</span>');
+    document.getElementById('m-resolved').textContent=rv[role][2];
+  }
+}
+
+// CHAT
+const chatResponses = {
+  'fire': '🔥 Fire Emergency Protocol:\n1. Don\'t panic — stay low\n2. Feel door before opening\n3. Use stairs ONLY — never elevator\n4. Meet at Muster Point C\n5. I\'ve alerted staff & FD — ETA 3min',
+  'help': '🆘 I\'m here! Tell me what\'s happening:\n• Fire / Smoke\n• Medical emergency\n• Security threat\n• Natural disaster\n• Other emergency\n\nOr press the red SOS button for instant response.',
+  'medical': '🏥 Medical Emergency:\n1. Call front desk: Ext 0\n2. Don\'t move the person if injured\n3. If cardiac arrest: Start CPR now\n4. AED located: Lobby & Floor 3\n5. Medic is being dispatched to you now.',
+  'default': '🤖 I\'m alerting staff to your situation. Stay calm — help is on the way. Can you describe what\'s happening in more detail? Are you in immediate danger?'
+};
+
+function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const val = inp.value.trim();
+  if(!val) return;
+  const body = document.getElementById('chat-body');
+
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.innerHTML = `<div class="msg-bubble">${val}</div><div class="msg-time">You · Just now</div>`;
+  body.appendChild(userMsg);
+  inp.value='';
+
+  setTimeout(()=>{
+    const low = val.toLowerCase();
+    let resp = chatResponses.default;
+    if(low.includes('fire')||low.includes('smoke')) resp=chatResponses.fire;
+    else if(low.includes('help')||low.includes('emergency')) resp=chatResponses.help;
+    else if(low.includes('medical')||low.includes('heart')||low.includes('breath')) resp=chatResponses.medical;
+
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg ai';
+    aiMsg.innerHTML = `<div class="msg-bubble">${resp.replace(/\n/g,'<br>')}</div><div class="msg-time">ARIA · Instant</div>`;
+    body.appendChild(aiMsg);
+    body.scrollTop = body.scrollHeight;
+  },700);
+  body.scrollTop = body.scrollHeight;
+}
+
+function addPanicMode() {
+  const body = document.getElementById('chat-body');
+  const msg = document.createElement('div');
+  msg.className = 'msg ai';
+  msg.innerHTML = `<div class="msg-bubble" style="border-color:rgba(255,23,68,0.3);background:rgba(255,23,68,0.08)">🎙️ <strong style="color:#ff6b6b">VOICE PANIC MODE ACTIVE</strong><br><br>I heard "Help me" — activating emergency protocol now.<br><br>📍 Location confirmed · 👥 Staff alerted · 📞 Emergency services notified<br><br>Stay on the line. Help is coming to your room in under 2 minutes.</div><div class="msg-time">ARIA · Emergency Mode</div>`;
+  body.appendChild(msg);
+  body.scrollTop = body.scrollHeight;
+}
+
+// SOS OVERLAY
+function triggerSOS() {
+  const overlay = document.getElementById('sos-overlay');
+  overlay.style.display = 'flex';
+  const steps = [
+    '📍 Acquiring GPS location...',
+    '📡 Broadcasting to hotel security...',
+    '🚑 Alerting emergency services...',
+    '📞 Notifying on-duty staff (3)...',
+    '🗺️ Sharing live location + situation type...',
+    '✅ All channels active — Help ETA: 90 seconds',
+  ];
+  const stepsEl = document.getElementById('sos-steps');
+  const prog = document.getElementById('sos-progress');
+  stepsEl.innerHTML='';
+  let i=0;
+  function showStep() {
+    if(i<steps.length) {
+      const d=document.createElement('div');
+      d.style.cssText='margin-bottom:4px;animation:fade-in 0.3s ease;color:'+(i===steps.length-1?'#00e676':'#8aa8c8');
+      d.textContent=steps[i];
+      stepsEl.appendChild(d);
+      prog.style.width=Math.round(((i+1)/steps.length)*100)+'%';
+      i++;
+      setTimeout(showStep,600);
+    }
+  }
+  showStep();
+}
+
+function closeSOSOverlay() {
+  document.getElementById('sos-overlay').style.display='none';
+}
+
+// Clicking overlay bg closes it
+document.getElementById('sos-overlay').addEventListener('click',function(e){if(e.target===this)closeSOSOverlay();});
+</script>
+</body>
+</html>
